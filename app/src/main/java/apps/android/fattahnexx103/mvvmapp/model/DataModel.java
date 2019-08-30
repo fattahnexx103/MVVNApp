@@ -3,7 +3,7 @@ package apps.android.fattahnexx103.mvvmapp.model;
 //Model Class
 public class DataModel {
 
-    private String title:
+    private String title;
     private String description;
     private String picUrl;
 
