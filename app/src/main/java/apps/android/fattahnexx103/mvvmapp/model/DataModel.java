@@ -24,4 +24,5 @@ public class DataModel {
     public String getPicUrl() {
         return picUrl;
     }
+
 }
