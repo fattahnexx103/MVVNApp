@@ -1,10 +1,17 @@
 package apps.android.fattahnexx103.mvvmapp.model;
 
+import com.google.gson.annotations.SerializedName;
+
 //Model Class
 public class DataModel {
 
+    @SerializedName("name")
     private String title;
+
+    @SerializedName("capital")
     private String description;
+
+    @SerializedName("flagPNG")
     private String picUrl;
 
     public DataModel(String title, String description, String picUrl) {

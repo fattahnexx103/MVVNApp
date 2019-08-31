@@ -6,7 +6,13 @@ import androidx.lifecycle.ViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
+import apps.android.fattahnexx103.mvvmapp.model.ApiService;
 import apps.android.fattahnexx103.mvvmapp.model.DataModel;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 
 public class DataViewModel extends ViewModel {
 
@@ -19,25 +25,42 @@ public class DataViewModel extends ViewModel {
 
     public MutableLiveData<Boolean> loading = new MutableLiveData<Boolean>();
 
+    private ApiService service = ApiService.getInstance();
+
+    private CompositeDisposable disposable = new CompositeDisposable(); //this is to handle data during interruptions like closing the app
+
     public void refresh(){
         fetchCountries();
     }
 
     private void fetchCountries(){
-        DataModel dataModel = new DataModel("T1", "Description 1", "https://1");
-        DataModel dataModel2 = new DataModel("T2", "Description 2", "https://2");
-        DataModel dataModel3 = new DataModel("T3", "Description 3", "https://3");
+        loading.setValue(true);
+        disposable.add(
+                service.getDataList()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new DisposableSingleObserver<List<DataModel>>() {
+                    @Override
+                    public void onSuccess(List<DataModel> dataModelList) {
+                        dataList.setValue(dataModelList);
+                        dataLoadError.setValue(false);
+                        loading.setValue(false);
+                    }
 
-        List<DataModel> dataModelsList = new ArrayList<>();
-        dataModelsList.add(dataModel);
-        dataModelsList.add(dataModel2);
-        dataModelsList.add(dataModel3);
-
-        //update the LiveData
-        dataList.setValue(dataModelsList);
-        dataLoadError.setValue(false);
-        loading.setValue(false);
+                    @Override
+                    public void onError(Throwable e) {
+                        dataLoadError.setValue(true);
+                        loading.setValue(false);
+                        e.printStackTrace();
+                    }
+                })
+        );
 
     }
 
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        disposable.clear(); //remove the data from disposable
+    }
 }
