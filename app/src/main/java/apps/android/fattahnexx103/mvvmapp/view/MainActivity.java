@@ -53,6 +53,14 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(dataAdapter);
 
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                viewModel.refresh(); //refresh the viewmodel on swipe
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
         observeViewModel(); //this method is responsible for observing view model
     }
 

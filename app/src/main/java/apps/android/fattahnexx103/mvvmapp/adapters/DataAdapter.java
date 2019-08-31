@@ -13,6 +13,7 @@ import java.util.List;
 
 import apps.android.fattahnexx103.mvvmapp.R;
 import apps.android.fattahnexx103.mvvmapp.model.DataModel;
+import apps.android.fattahnexx103.mvvmapp.view.Util;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -73,6 +74,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.DataViewHolder
             //feed the views the data
            cardTitle.setText(dataModel.getTitle());
            cardDescription.setText(dataModel.getDescription());
+           Util.loadImage(dataImage, dataModel.getPicUrl(), Util.getProgressDrawable(dataImage.getContext()));
         }
     }
 }
