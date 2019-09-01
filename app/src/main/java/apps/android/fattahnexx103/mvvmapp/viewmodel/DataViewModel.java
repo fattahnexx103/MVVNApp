@@ -6,6 +6,9 @@ import androidx.lifecycle.ViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import apps.android.fattahnexx103.mvvmapp.di.DaggerApiComponent;
 import apps.android.fattahnexx103.mvvmapp.model.ApiService;
 import apps.android.fattahnexx103.mvvmapp.model.DataModel;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -25,9 +28,15 @@ public class DataViewModel extends ViewModel {
 
     public MutableLiveData<Boolean> loading = new MutableLiveData<Boolean>();
 
-    private ApiService service = ApiService.getInstance();
+    @Inject
+    public ApiService service;
 
     private CompositeDisposable disposable = new CompositeDisposable(); //this is to handle data during interruptions like closing the app
+
+    public DataViewModel(){
+        super();
+        DaggerApiComponent.create().inject(this);
+    }
 
     public void refresh(){
         fetchCountries();
